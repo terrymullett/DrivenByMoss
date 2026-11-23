@@ -88,7 +88,7 @@ public class CrossfadeParameter extends AbstractParameterImpl
     @Override
     public void setNormalizedValue (final double value)
     {
-        final double v = Math.max (Math.min (value, 1), 0);
+        final double v = Math.clamp (value, 0, 1);
 
         final CrossfadeSetting cs;
         if (v < 0.1)

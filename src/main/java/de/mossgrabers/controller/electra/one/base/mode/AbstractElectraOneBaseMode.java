@@ -2,15 +2,16 @@
 // (c) 2017-2026
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
-package de.mossgrabers.controller.electra.one.mode;
+package de.mossgrabers.controller.electra.one.base.mode;
 
+import java.util.List;
 import java.util.Optional;
 
-import de.mossgrabers.controller.electra.one.ElectraOneConfiguration;
-import de.mossgrabers.controller.electra.one.controller.ElectraOneColorManager;
-import de.mossgrabers.controller.electra.one.controller.ElectraOneControlSurface;
-import de.mossgrabers.framework.command.trigger.transport.PlayCommand;
+import de.mossgrabers.controller.electra.one.base.AbstractElectraOneConfiguration;
+import de.mossgrabers.controller.electra.one.base.controller.AbstractElectraOneControlSurface;
+import de.mossgrabers.controller.electra.one.base.controller.ElectraOneColorManager;
 import de.mossgrabers.framework.controller.ButtonID;
+import de.mossgrabers.framework.controller.ContinuousID;
 import de.mossgrabers.framework.daw.IModel;
 import de.mossgrabers.framework.daw.data.ICursorDevice;
 import de.mossgrabers.framework.mode.track.DefaultTrackMode;
@@ -19,12 +20,14 @@ import de.mossgrabers.framework.mode.track.DefaultTrackMode;
 /**
  * Abstract base mode for all Electra One modes.
  *
+ * @param <S> The specific type of the control surface
+ * @param <C> The specific type of the configuration
+ *
  * @author Jürgen Moßgraber
  */
-public abstract class AbstractElectraOneMode extends DefaultTrackMode<ElectraOneControlSurface, ElectraOneConfiguration>
+public abstract class AbstractElectraOneBaseMode<S extends AbstractElectraOneControlSurface<C>, C extends AbstractElectraOneConfiguration> extends DefaultTrackMode<S, C>
 {
-    protected final PlayCommand<ElectraOneControlSurface, ElectraOneConfiguration> playCommand;
-    protected final PageCache                                                      pageCache;
+    protected final PageCache<S, C> pageCache;
 
 
     /**
@@ -32,15 +35,18 @@ public abstract class AbstractElectraOneMode extends DefaultTrackMode<ElectraOne
      *
      * @param pageIndex The index of the preset page where the mode is located
      * @param name The name of the mode
+     * @param numRows The number of rows to cache
+     * @param numCols The number of columns to cache
      * @param surface The control surface
      * @param model The model
+     * @param controls The IDs of the knobs or faders to control this mode
+     * @param groupOffset The ID of the first group
      */
-    protected AbstractElectraOneMode (final int pageIndex, final String name, final ElectraOneControlSurface surface, final IModel model)
+    protected AbstractElectraOneBaseMode (final int pageIndex, final String name, final S surface, final IModel model, final int numRows, final int numCols, final List<ContinuousID> controls, final int groupOffset)
     {
-        super (name, surface, model, false, ElectraOneControlSurface.KNOB_IDS);
+        super (name, surface, model, false, controls);
 
-        this.playCommand = new PlayCommand<> (model, surface);
-        this.pageCache = new PageCache (pageIndex, surface);
+        this.pageCache = new PageCache<> (pageIndex, numRows, numCols, surface, groupOffset);
     }
 
 
@@ -80,7 +86,7 @@ public abstract class AbstractElectraOneMode extends DefaultTrackMode<ElectraOne
     public void setEditing (final int controlID, final boolean isTouched)
     {
         final int index = this.pageCache.getIndex (controlID);
-        if (index < 0 || index >= 36)
+        if (index < 0 || index >= this.pageCache.getPageSize ())
         {
             this.surface.getHost ().error ("Control ID out of bounds: " + controlID);
             return;

@@ -13,6 +13,7 @@ import de.mossgrabers.framework.controller.color.ColorEx;
 import de.mossgrabers.framework.controller.color.ColorManager;
 import de.mossgrabers.framework.controller.grid.BlinkingPadGrid;
 import de.mossgrabers.framework.daw.midi.IMidiOutput;
+import de.mossgrabers.framework.utils.FrameworkException;
 
 
 /**
@@ -44,7 +45,7 @@ public class OxiOnePadGrid extends BlinkingPadGrid
      * @param configuration The configuration
      * @param isMk2 True if it is Mk2 otherwise Mk1
      */
-    public OxiOnePadGrid (final ColorManager colorManager, final IMidiOutput output, final OxiOneConfiguration configuration, boolean isMk2)
+    public OxiOnePadGrid (final ColorManager colorManager, final IMidiOutput output, final OxiOneConfiguration configuration, final boolean isMk2)
     {
         super (colorManager, output, 8, 16, 0);
 
@@ -77,7 +78,7 @@ public class OxiOnePadGrid extends BlinkingPadGrid
         }
         catch (final IOException ex)
         {
-            throw new RuntimeException ("Could not create sysex message.");
+            throw new FrameworkException ("Could not create sysex message.");
         }
     }
 

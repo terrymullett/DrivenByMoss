@@ -4,11 +4,11 @@
 
 package de.mossgrabers.bitwig.framework.extension;
 
-import de.mossgrabers.framework.controller.IControllerSetup;
-
 import com.bitwig.extension.controller.ControllerExtension;
 import com.bitwig.extension.controller.ControllerExtensionDefinition;
 import com.bitwig.extension.controller.api.ControllerHost;
+
+import de.mossgrabers.framework.controller.IControllerSetup;
 
 
 /**
@@ -41,9 +41,16 @@ public class GenericControllerExtension extends ControllerExtension
     {
         this.setup.init ();
         final ControllerHost host = this.getHost ();
-        host.scheduleTask ( () -> {
-            this.setup.startup ();
-            host.println ("Running.");
+        host.scheduleTask (() -> {
+            try
+            {
+                this.setup.startup ();
+                host.println ("Running.");
+            }
+            catch (final RuntimeException ex)
+            {
+                host.println (ex.getMessage ());
+            }
         }, 1000);
     }
 

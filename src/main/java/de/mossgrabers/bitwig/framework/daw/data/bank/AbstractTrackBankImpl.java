@@ -207,7 +207,7 @@ public abstract class AbstractTrackBankImpl extends AbstractChannelBankImpl<Trac
         if (name == null && color == null)
             return;
 
-        this.host.scheduleTask ( () -> {
+        this.host.scheduleTask (() -> {
 
             if (!this.cursorTrack.doesExist ())
                 return;

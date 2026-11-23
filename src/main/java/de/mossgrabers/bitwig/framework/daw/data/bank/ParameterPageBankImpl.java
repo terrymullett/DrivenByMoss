@@ -4,18 +4,18 @@
 
 package de.mossgrabers.bitwig.framework.daw.data.bank;
 
-import de.mossgrabers.bitwig.framework.daw.data.Util;
-import de.mossgrabers.framework.daw.data.bank.AbstractBank;
-import de.mossgrabers.framework.daw.data.bank.IParameterPageBank;
-import de.mossgrabers.framework.observer.IItemSelectionObserver;
-
-import com.bitwig.extension.controller.api.CursorRemoteControlsPage;
-import com.bitwig.extension.controller.api.SettableIntegerValue;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import com.bitwig.extension.controller.api.CursorRemoteControlsPage;
+import com.bitwig.extension.controller.api.SettableIntegerValue;
+
+import de.mossgrabers.bitwig.framework.daw.data.Util;
+import de.mossgrabers.framework.daw.data.bank.AbstractBank;
+import de.mossgrabers.framework.daw.data.bank.IParameterPageBank;
+import de.mossgrabers.framework.observer.IItemSelectionObserver;
 
 
 /**
@@ -128,7 +128,10 @@ public class ParameterPageBankImpl extends AbstractBank<String> implements IPara
     @Override
     public void scrollTo (final int position)
     {
-        this.remoteControls.selectedPageIndex ().set (Math.max (Math.min (position, this.getItemCount () - 1), 0));
+        final int itemCount = this.getItemCount ();
+        if (itemCount <= 0)
+            return;
+        this.remoteControls.selectedPageIndex ().set (Math.clamp (position, 0, itemCount - 1));
         this.firePageObserver ();
     }
 

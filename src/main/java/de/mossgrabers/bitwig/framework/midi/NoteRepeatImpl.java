@@ -4,17 +4,17 @@
 
 package de.mossgrabers.bitwig.framework.midi;
 
-import de.mossgrabers.bitwig.framework.daw.data.Util;
-import de.mossgrabers.framework.daw.midi.ArpeggiatorMode;
-import de.mossgrabers.framework.daw.midi.INoteRepeat;
-import de.mossgrabers.framework.utils.FrameworkException;
+import java.util.Locale;
 
 import com.bitwig.extension.controller.api.Arpeggiator;
 import com.bitwig.extension.controller.api.EnumDefinition;
 import com.bitwig.extension.controller.api.EnumValueDefinition;
 import com.bitwig.extension.controller.api.NoteLatch;
 
-import java.util.Locale;
+import de.mossgrabers.bitwig.framework.daw.data.Util;
+import de.mossgrabers.framework.daw.midi.ArpeggiatorMode;
+import de.mossgrabers.framework.daw.midi.INoteRepeat;
+import de.mossgrabers.framework.utils.FrameworkException;
 
 
 /**
@@ -155,6 +155,14 @@ public class NoteRepeatImpl implements INoteRepeat
     public boolean usePressure ()
     {
         return this.noteRepeat.usePressureToVelocity ().get ();
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void setUsePressure (final boolean usePressure)
+    {
+        this.noteRepeat.usePressureToVelocity ().set (usePressure);
     }
 
 

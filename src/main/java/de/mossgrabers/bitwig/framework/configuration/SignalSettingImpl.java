@@ -38,6 +38,6 @@ public class SignalSettingImpl extends AbstractSetting implements ISignalSetting
     @Override
     public void addSignalObserver (final IValueObserver<Void> observer)
     {
-        this.signalValue.addSignalObserver ( () -> observer.update (null));
+        this.signalValue.addSignalObserver (() -> observer.update (null));
     }
 }

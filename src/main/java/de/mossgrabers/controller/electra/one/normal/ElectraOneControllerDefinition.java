@@ -2,14 +2,14 @@
 // (c) 2017-2026
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
-package de.mossgrabers.controller.electra.one;
-
-import java.util.List;
-import java.util.UUID;
+package de.mossgrabers.controller.electra.one.normal;
 
 import de.mossgrabers.framework.controller.DefaultControllerDefinition;
 import de.mossgrabers.framework.utils.OperatingSystem;
 import de.mossgrabers.framework.utils.Pair;
+
+import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -20,7 +20,6 @@ import de.mossgrabers.framework.utils.Pair;
 public class ElectraOneControllerDefinition extends DefaultControllerDefinition
 {
     private static final String ELECTRA_CONTROLLER_ELECTRA_CTRL = "Electra Controller Electra CTRL";
-
 
     /**
      * Constructor.

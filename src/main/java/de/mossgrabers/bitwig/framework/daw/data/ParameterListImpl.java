@@ -75,6 +75,6 @@ public class ParameterListImpl implements IParameterList
     private void reAdjust (final CursorRemoteControlsPage remoteControls, final int page)
     {
         if (page < remoteControls.pageCount ().get () && remoteControls.selectedPageIndex ().get () != page)
-            this.host.scheduleTask ( () -> remoteControls.selectedPageIndex ().set (page), 500);
+            this.host.scheduleTask (() -> remoteControls.selectedPageIndex ().set (page), 500);
     }
 }

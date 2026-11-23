@@ -63,7 +63,8 @@ public class LaunchpadCursorCommand extends CursorCommand<LaunchpadControlSurfac
     @Override
     protected void updateArrowStates ()
     {
-        if (this.surface.getViewManager ().getActive () instanceof final IScrollableView view)
+        final IView active = this.surface.getViewManager ().getActive ();
+        if (active instanceof final IScrollableView view)
             view.updateScrollStates (this.scrollStates);
         else
             this.scrollStates.setAll (false);
@@ -406,7 +407,7 @@ public class LaunchpadCursorCommand extends CursorCommand<LaunchpadControlSurfac
             return;
 
         this.transport.setTempo (this.transport.getTempo () + amount);
-        this.surface.scheduleTask ( () -> this.triggerChangeTempo (amount, buttonID), REPEAT_SPEED);
+        this.surface.scheduleTask (() -> this.triggerChangeTempo (amount, buttonID), REPEAT_SPEED);
     }
 
 
@@ -420,7 +421,7 @@ public class LaunchpadCursorCommand extends CursorCommand<LaunchpadControlSurfac
         final int a = (int) Math.round (amount * max / 100.0);
         shuffleParam.setValue (Math.min (max, shuffleParam.getValue () + a));
 
-        this.surface.scheduleTask ( () -> this.triggerChangeShuffle (amount, buttonID), REPEAT_SPEED);
+        this.surface.scheduleTask (() -> this.triggerChangeShuffle (amount, buttonID), REPEAT_SPEED);
     }
 
 
@@ -435,7 +436,7 @@ public class LaunchpadCursorCommand extends CursorCommand<LaunchpadControlSurfac
         else
             application.zoomOut ();
 
-        this.surface.scheduleTask ( () -> this.triggerChangeZoom1 (in), REPEAT_SPEED);
+        this.surface.scheduleTask (() -> this.triggerChangeZoom1 (in), REPEAT_SPEED);
     }
 
 

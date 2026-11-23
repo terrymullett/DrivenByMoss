@@ -357,7 +357,7 @@ public class CursorClipImpl implements INoteClip
     {
         final double offset = slow ? 1 : 10;
         final double value = this.valueChanger.isIncrease (control) ? this.getAccent () + offset : this.getAccent () - offset;
-        this.getClip ().getAccent ().set (Math.max (0, Math.min (1, (value + 100) / 200)));
+        this.getClip ().getAccent ().set (Math.clamp ((value + 100) / 200, 0, 1));
     }
 
 
@@ -448,7 +448,7 @@ public class CursorClipImpl implements INoteClip
         final IStepInfo noteStepCopy = noteStep.createCopy ();
 
         this.setStep (destinationPosition, (int) (noteStepCopy.getVelocity () * 127), noteStepCopy.getDuration ());
-        this.host.scheduleTask ( () -> {
+        this.host.scheduleTask (() -> {
 
             this.updateStepVelocity (destinationPosition, noteStepCopy.getVelocity ());
             this.updateStepGain (destinationPosition, noteStepCopy.getGain ());
@@ -537,7 +537,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepVelocity (final NotePosition notePosition, final double velocity)
     {
-        final double v = Math.min (1.0, Math.max (0, velocity));
+        final double v = Math.clamp (velocity, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setVelocity (v);
         if (this.editSteps.isEmpty ())
@@ -559,7 +559,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepVelocitySpread (final NotePosition notePosition, final double velocitySpread)
     {
-        final double v = Math.min (1.0, Math.max (0, velocitySpread));
+        final double v = Math.clamp (velocitySpread, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setVelocitySpread (v);
         if (this.editSteps.isEmpty ())
@@ -581,7 +581,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepReleaseVelocity (final NotePosition notePosition, final double releaseVelocity)
     {
-        final double rv = Math.min (1.0, Math.max (0, releaseVelocity));
+        final double rv = Math.clamp (releaseVelocity, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setReleaseVelocity (rv);
         if (this.editSteps.isEmpty ())
@@ -603,7 +603,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepPressure (final NotePosition notePosition, final double pressure)
     {
-        final double p = Math.min (1.0, Math.max (0, pressure));
+        final double p = Math.clamp (pressure, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setPressure (p);
         if (this.editSteps.isEmpty ())
@@ -625,7 +625,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepTimbre (final NotePosition notePosition, final double timbre)
     {
-        final double t = Math.min (1.0, Math.max (-1.0, timbre));
+        final double t = Math.clamp (timbre, -1.0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setTimbre (t);
         if (this.editSteps.isEmpty ())
@@ -647,7 +647,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepPan (final NotePosition notePosition, final double pan)
     {
-        final double p = Math.min (1.0, Math.max (-1.0, pan));
+        final double p = Math.clamp (pan, -1.0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setPan (p);
         if (this.editSteps.isEmpty ())
@@ -673,7 +673,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepTranspose (final NotePosition notePosition, final double transpose)
     {
-        final double t = Math.min (TRANSPOSE_RANGE, Math.max (-TRANSPOSE_RANGE, transpose));
+        final double t = Math.clamp (transpose, -TRANSPOSE_RANGE, TRANSPOSE_RANGE);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setTranspose (t);
         if (this.editSteps.isEmpty ())
@@ -703,7 +703,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepGain (final NotePosition notePosition, final double gain)
     {
-        final double g = Math.min (1.0, Math.max (0, gain));
+        final double g = Math.clamp (gain, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setGain (g);
         if (this.editSteps.isEmpty ())
@@ -736,7 +736,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepChance (final NotePosition notePosition, final double chance)
     {
-        final double c = Math.min (1.0, Math.max (0, chance));
+        final double c = Math.clamp (chance, 0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setChance (c);
         if (this.editSteps.isEmpty ())
@@ -763,7 +763,7 @@ public class CursorClipImpl implements INoteClip
         final NoteOccurrenceType occurrenceType = stepInfo.getOccurrence ();
         final List<NoteOccurrenceType> types = Arrays.asList (NoteOccurrenceType.values ());
         final int typeIndex = Math.max (0, types.indexOf (occurrenceType));
-        final int newIndex = Math.max (0, Math.min (types.size () - 1, typeIndex + (increase ? 1 : -1)));
+        final int newIndex = Math.clamp (typeIndex + (increase ? 1L : -1L), 0, types.size () - 1);
         final NoteOccurrenceType newType = types.get (newIndex);
         stepInfo.setOccurrence (newType);
         if (this.editSteps.isEmpty ())
@@ -799,7 +799,7 @@ public class CursorClipImpl implements INoteClip
     {
         final IStepInfo info = this.getStep (notePosition);
         final int recurrenceLength = info.getRecurrenceLength () + (this.valueChanger.isIncrease (control) ? 1 : -1);
-        this.updateStepRecurrenceLength (notePosition, Math.min (8, Math.max (1, recurrenceLength)));
+        this.updateStepRecurrenceLength (notePosition, Math.clamp (recurrenceLength, 1, 8));
     }
 
 
@@ -807,7 +807,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepRecurrenceLength (final NotePosition notePosition, final int recurrenceLength)
     {
-        final int rl = Math.min (8, Math.max (1, recurrenceLength));
+        final int rl = Math.clamp (recurrenceLength, 1, 8);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setRecurrenceLength (rl);
         if (this.editSteps.isEmpty ())
@@ -857,7 +857,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepRepeatCount (final NotePosition notePosition, final int value)
     {
-        final int v = Math.min (127, Math.max (-127, value));
+        final int v = Math.clamp (value, -127, 127);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setRepeatCount (v);
         if (this.editSteps.isEmpty ())
@@ -879,7 +879,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepRepeatCurve (final NotePosition notePosition, final double value)
     {
-        final double v = Math.min (1.0, Math.max (-1.0, value));
+        final double v = Math.clamp (value, -1.0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setRepeatCurve (v);
         if (this.editSteps.isEmpty ())
@@ -901,7 +901,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepRepeatVelocityCurve (final NotePosition notePosition, final double velocityCurve)
     {
-        final double vc = Math.min (1.0, Math.max (-1.0, velocityCurve));
+        final double vc = Math.clamp (velocityCurve, -1.0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setRepeatVelocityCurve (vc);
         if (this.editSteps.isEmpty ())
@@ -923,7 +923,7 @@ public class CursorClipImpl implements INoteClip
     @Override
     public void updateStepRepeatVelocityEnd (final NotePosition notePosition, final double velocityEnd)
     {
-        final double ve = Math.min (1.0, Math.max (-1.0, velocityEnd));
+        final double ve = Math.clamp (velocityEnd, -1.0, 1.0);
         final StepInfoImpl stepInfo = this.getUpdateableStep (notePosition);
         stepInfo.setRepeatVelocityEnd (ve);
         if (this.editSteps.isEmpty ())
@@ -1219,7 +1219,7 @@ public class CursorClipImpl implements INoteClip
         if (this.editSteps.isEmpty ())
             return;
         this.sendClipData (editStep);
-        this.host.scheduleTask ( () -> this.delayedUpdate (new NotePosition (editStep.getChannel (), editStep.getStep (), editStep.getNote ())), 100);
+        this.host.scheduleTask (() -> this.delayedUpdate (new NotePosition (editStep.getChannel (), editStep.getStep (), editStep.getNote ())), 100);
     }
 
 

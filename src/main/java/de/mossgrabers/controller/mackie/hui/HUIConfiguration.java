@@ -105,24 +105,26 @@ public class HUIConfiguration extends AbstractConfiguration
     @Override
     public void init (final ISettingsUI globalSettings, final ISettingsUI documentSettings)
     {
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Hardware
 
         this.activateHardwareSettings (globalSettings);
         this.activateEnableVUMetersSetting (globalSettings, CATEGORY_HARDWARE_SETUP);
 
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Assignable buttons
 
         this.activateAssignableSettings (globalSettings);
 
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Transport
 
-        this.activateBehaviourOnStopSetting (globalSettings);
         this.activateBehaviourOnPauseSetting (globalSettings);
+        this.activateBehaviourOnStopSetting (globalSettings);
+        this.activateDoubleClickPlayButton (globalSettings);
+        this.activateDoubleClickStopButton (globalSettings);
 
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Workflow
 
         this.activateExcludeDeactivatedItemsSetting (globalSettings);
@@ -251,7 +253,7 @@ public class HUIConfiguration extends AbstractConfiguration
      */
     public void toggleZoomState ()
     {
-        this.zoomStateSetting.set (this.zoomState ? ON_OFF_OPTIONS[0] : ON_OFF_OPTIONS[1]);
+        this.zoomStateSetting.set (ON_OFF_OPTIONS[this.zoomState ? 0 : 1]);
     }
 
 

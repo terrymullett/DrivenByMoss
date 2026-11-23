@@ -8,17 +8,18 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import de.mossgrabers.controller.mackie.mcu.MCUConfiguration.MainDisplay;
 import de.mossgrabers.controller.mackie.mcu.MCUConfiguration.SecondDisplay;
 import de.mossgrabers.controller.mackie.mcu.MCUConfiguration.VUMeterStyle;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.AssignableCommand;
-import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUDevicesCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.FaderTouchCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.KeyCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.KeyCommand.Key;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUCursorCommand;
+import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUDevicesCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUFlipCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUMoveTrackBankCommand;
 import de.mossgrabers.controller.mackie.mcu.command.trigger.MCUWindCommand;
@@ -173,7 +174,7 @@ public class MCUControllerSetup extends AbstractControllerSetup<MCUControlSurfac
     private final int []                                          faderValues      = new int [32];
     private int                                                   masterFaderValue = -1;
     private final int                                             numMCUDevices;
-    private final IValueChanger                                         encoderValueChanger;
+    private final IValueChanger                                   encoderValueChanger;
     private JogWheelCommand<MCUControlSurface, MCUConfiguration>  jogWheelCommand  = null;
     private MasterVolumeMode<MCUControlSurface, MCUConfiguration> masterVolumeMode;
 
@@ -281,7 +282,7 @@ public class MCUControllerSetup extends AbstractControllerSetup<MCUControlSurfac
 
         final ITrackBank trackBank = this.model.getTrackBank ();
         trackBank.setIndication (true);
-        trackBank.addSelectionObserver ( (index, isSelected) -> this.handleTrackChange (isSelected));
+        trackBank.addSelectionObserver ((index, isSelected) -> this.handleTrackChange (isSelected));
     }
 
 
@@ -374,7 +375,7 @@ public class MCUControllerSetup extends AbstractControllerSetup<MCUControlSurfac
             }
         }
 
-        this.model.getMasterTrack ().addSelectionObserver ( (index, isSelected) -> {
+        this.model.getMasterTrack ().addSelectionObserver ((index, isSelected) -> {
             final ModeManager modeManager = this.getSurface ().getModeManager ();
             if (isSelected && modeManager.isActive (Modes.TRACK))
                 modeManager.setActive (Modes.MASTER);
@@ -780,8 +781,6 @@ public class MCUControllerSetup extends AbstractControllerSetup<MCUControlSurfac
         for (int index = 0; index < this.numMCUDevices; index++)
         {
             final MCUControlSurface surface = this.getSurface (index);
-            surface.switchVuMode (MCUControlSurface.VUMODE_LED);
-
             surface.getViewManager ().setActive (Views.CONTROL);
             surface.getModeManager ().setActive (this.configuration.getStartupMode ());
         }
@@ -961,12 +960,16 @@ public class MCUControllerSetup extends AbstractControllerSetup<MCUControlSurfac
             {
                 if (this.masterVolumeMode.isControlLastParamActive ())
                 {
-                    final IFocusedParameter focusedParameter = this.model.getFocusedParameter ().get ();
-                    final int value = focusedParameter.doesExist () ? focusedParameter.getValue () : 0;
-                    if (value != this.masterFaderValue)
+                    final Optional<IFocusedParameter> focusedParameterOpt = this.model.getFocusedParameter ();
+                    if (focusedParameterOpt.isPresent ())
                     {
-                        this.masterFaderValue = value;
-                        output.sendPitchbend (8, value % 127, value / 127);
+                        final IFocusedParameter focusedParameter = focusedParameterOpt.get ();
+                        final int value = focusedParameter.doesExist () ? focusedParameter.getValue () : 0;
+                        if (value != this.masterFaderValue)
+                        {
+                            this.masterFaderValue = value;
+                            output.sendPitchbend (8, value % 127, value / 127);
+                        }
                     }
                 }
                 else

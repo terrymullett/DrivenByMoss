@@ -569,7 +569,7 @@ public class ChannelImpl extends AbstractDeviceChainImpl<Channel> implements ICh
     @Override
     public void addColorObserver (final IValueObserver<ColorEx> observer)
     {
-        this.deviceChain.color ().addValueObserver ( (red, green, blue) -> observer.update (new ColorEx (red, green, blue)));
+        this.deviceChain.color ().addValueObserver ((red, green, blue) -> observer.update (new ColorEx (red, green, blue)));
     }
 
 

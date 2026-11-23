@@ -17,9 +17,6 @@ import de.mossgrabers.framework.graphics.IGraphicsInfo;
  *
  * @author Jürgen Moßgraber
  */
-/**
- *
- */
 public class GraphOverlayComponent implements IComponent
 {
     private final double  x;
@@ -122,7 +119,7 @@ public class GraphOverlayComponent implements IComponent
             return false;
         if (!Arrays.equals (this.data, other.data) || Double.doubleToLongBits (this.height) != Double.doubleToLongBits (other.height) || this.maxValue != other.maxValue || Double.doubleToLongBits (this.width) != Double.doubleToLongBits (other.width))
             return false;
-        if ((Double.doubleToLongBits (this.x) != Double.doubleToLongBits (other.x)) || (Double.doubleToLongBits (this.y) != Double.doubleToLongBits (other.y)))
+        if (Double.doubleToLongBits (this.x) != Double.doubleToLongBits (other.x) || Double.doubleToLongBits (this.y) != Double.doubleToLongBits (other.y))
             return false;
         return true;
     }

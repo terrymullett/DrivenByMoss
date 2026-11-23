@@ -44,7 +44,7 @@ public class OxiOneFillModeGrooveCommand extends AbstractTriggerCommand<OxiOneCo
         if (event == ButtonEvent.UP)
         {
             this.transport.toggleFillModeActive ();
-            this.mvHelper.delayDisplay ( () -> "Fill Mode: " + (this.transport.isFillModeActive () ? "On" : "Off"));
+            this.mvHelper.delayDisplay (() -> "Fill Mode: " + (this.transport.isFillModeActive () ? "On" : "Off"));
         }
     }
 
@@ -54,6 +54,6 @@ public class OxiOneFillModeGrooveCommand extends AbstractTriggerCommand<OxiOneCo
     public void executeShifted (final ButtonEvent event)
     {
         if (event == ButtonEvent.DOWN)
-            this.surface.getModeManager ().setActive (Modes.GROOVE);
+            this.surface.getModeManager ().setTemporary (Modes.GROOVE);
     }
 }

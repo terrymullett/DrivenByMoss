@@ -4,9 +4,9 @@
 
 package de.mossgrabers.bitwig.framework.daw.data;
 
-import de.mossgrabers.framework.controller.valuechanger.IValueChanger;
-
 import com.bitwig.extension.controller.api.Parameter;
+
+import de.mossgrabers.framework.controller.valuechanger.IValueChanger;
 
 
 /**
@@ -76,6 +76,6 @@ public class RawParameterImpl extends ParameterImpl
 
     private void handleRawValue (final double value)
     {
-        this.rawValue = Math.min (this.max, Math.max (this.min, value));
+        this.rawValue = Math.clamp (value, this.min, this.max);
     }
 }

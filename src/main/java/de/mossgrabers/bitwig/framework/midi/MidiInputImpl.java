@@ -276,12 +276,15 @@ public class MidiInputImpl implements IMidiInput
     {
         final ContinuousHardwareControl<?> hardwareControl;
 
-        if (continuousControl instanceof final HwRelativeKnobImpl relativeKnob)
-            hardwareControl = relativeKnob.getHardwareKnob ();
-        else if (continuousControl instanceof final AbstractHwAbsoluteControl absoluteControl)
-            hardwareControl = absoluteControl.getHardwareControl ();
-        else
-            return;
+        switch (continuousControl)
+        {
+            case final HwRelativeKnobImpl relativeKnob -> hardwareControl = relativeKnob.getHardwareKnob ();
+            case final AbstractHwAbsoluteControl<?> absoluteControl -> hardwareControl = absoluteControl.getHardwareControl ();
+
+            default -> {
+                return;
+            }
+        }
 
         this.bindTouch (hardwareControl, type, channel, control);
     }

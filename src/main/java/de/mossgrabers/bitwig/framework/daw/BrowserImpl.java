@@ -193,17 +193,18 @@ public class BrowserImpl extends AbstractBrowser
     public void replace (final IItem item)
     {
         final InsertionPoint insertionPoint;
-        if (item instanceof final CursorDeviceImpl cursorDeviceImpl)
-            insertionPoint = cursorDeviceImpl.getCursorDevice ().replaceDeviceInsertionPoint ();
-        else if (item instanceof final SlotImpl slot)
-            insertionPoint = slot.getSlot ().replaceInsertionPoint ();
-        else if (item instanceof final DrumPadImpl drumPad)
-            insertionPoint = drumPad.getDrumPad ().insertionPoint ();
-        else
-            return;
+        switch (item)
+        {
+            case final CursorDeviceImpl cursorDeviceImpl -> insertionPoint = cursorDeviceImpl.getCursorDevice ().replaceDeviceInsertionPoint ();
+            case final SlotImpl slot -> insertionPoint = slot.getSlot ().replaceInsertionPoint ();
+            case final DrumPadImpl drumPad -> insertionPoint = drumPad.getDrumPad ().insertionPoint ();
+            default -> {
+                return;
+            }
+        }
 
         final String name = item.getName ();
-        this.infoText = "Replace: " + (name.length () == 0 ? "Empty" : name);
+        this.infoText = "Replace: " + (name.isEmpty () ? "Empty" : name);
 
         this.browse (insertionPoint);
     }
@@ -247,6 +248,23 @@ public class BrowserImpl extends AbstractBrowser
             this.insertAfterCursorDevice ();
         else
             this.insertBeforeCursorDevice ();
+    }
+
+
+    /**
+     * Insert a CLAP device directly by its CLAP ID (e.g. "com.jmoss.dsp-lab"), bypassing the
+     * browser entirely. This reaches plug-ins that the popup browser's smart-collection column
+     * cannot (the "Plug-ins" collection is not populated in the insertion popup). Inserts at the
+     * end of the selected track's device chain, or after the cursor device if one exists.
+     *
+     * @param clapId The CLAP plugin ID
+     */
+    @Override
+    public void insertClapDevice (final String clapId)
+    {
+        final InsertionPoint insertionPoint = this.cursorDevice.exists ().get () ? this.cursorDevice.afterDeviceInsertionPoint () : this.cursorTrack.endOfDeviceChainInsertionPoint ();
+        if (insertionPoint != null)
+            insertionPoint.insertCLAPDevice (clapId);
     }
 
 

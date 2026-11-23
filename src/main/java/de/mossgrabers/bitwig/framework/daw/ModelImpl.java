@@ -113,7 +113,7 @@ public class ModelImpl extends AbstractModel
         final int numSends = this.modelSetup.getNumSends ();
         final int numScenes = this.modelSetup.getNumScenes ();
 
-        //////////////////////////////////////////////////////////////////////////////
+        // ----------------------------------------------------------------
         // Create track banks
 
         final TrackBank tb;
@@ -146,7 +146,7 @@ public class ModelImpl extends AbstractModel
         if (modelSetup.wantsClipLauncherNavigator ())
             this.clipLauncherNavigator = new ClipLauncherNavigatorImpl (controllerHost, this);
 
-        //////////////////////////////////////////////////////////////////////////////
+        // ----------------------------------------------------------------
         // Create devices
 
         if (this.modelSetup.wantsFocusedParameter ())

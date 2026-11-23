@@ -43,8 +43,8 @@ public class HwFaderImpl extends AbstractHwAbsoluteControl<HardwareSlider> imple
     {
         this.touchCommand = command;
 
-        this.hardwareControl.beginTouchAction ().addBinding (this.controllerHost.createAction ( () -> this.touchCommand.execute (ButtonEvent.DOWN, 127), () -> ""));
-        this.hardwareControl.endTouchAction ().addBinding (this.controllerHost.createAction ( () -> this.touchCommand.execute (ButtonEvent.UP, 0), () -> ""));
+        this.hardwareControl.beginTouchAction ().addBinding (this.controllerHost.createAction (() -> this.touchCommand.execute (ButtonEvent.DOWN, 127), () -> ""));
+        this.hardwareControl.endTouchAction ().addBinding (this.controllerHost.createAction (() -> this.touchCommand.execute (ButtonEvent.UP, 0), () -> ""));
 
         input.bindTouch (this, type, channel, control);
     }

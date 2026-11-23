@@ -47,19 +47,25 @@ public class SLMkIIIConfiguration extends AbstractConfiguration
     @Override
     public void init (final ISettingsUI globalSettings, final ISettingsUI documentSettings)
     {
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Scale for light guide
 
         this.activateScaleBaseSetting (documentSettings);
         this.activateScaleSetting (documentSettings);
         this.activateScaleInScaleSetting (documentSettings);
 
-        ///////////////////////////
+        // ----------------------------------------------------------------
+        // Transport
+
+        this.activateBehaviourOnPauseSetting (globalSettings);
+        this.activateBehaviourOnStopSetting (globalSettings);
+        this.activateDoubleClickPlayButton (globalSettings);
+        this.activateDoubleClickStopButton (globalSettings);
+
+        // ----------------------------------------------------------------
         // Workflow
 
         this.activateExcludeDeactivatedItemsSetting (globalSettings);
-        this.activateBehaviourOnStopSetting (globalSettings);
-        this.activateBehaviourOnPauseSetting (globalSettings);
         this.activateNewClipLengthSetting (globalSettings);
         this.activateKnobSpeedSetting (globalSettings);
 
@@ -77,7 +83,7 @@ public class SLMkIIIConfiguration extends AbstractConfiguration
         });
         this.isSettingActive.add (ENABLE_LIGHTGUIDE);
 
-        ///////////////////////////
+        // ----------------------------------------------------------------
         // Session
 
         this.activateSelectClipOnLaunchSetting (globalSettings);

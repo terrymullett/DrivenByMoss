@@ -44,8 +44,8 @@ public class HwAbsoluteKnobImpl extends AbstractHwAbsoluteControl<AbsoluteHardwa
     {
         this.touchCommand = command;
 
-        this.hardwareKnob.beginTouchAction ().addBinding (this.controllerHost.createAction ( () -> this.triggerTouch (true), () -> ""));
-        this.hardwareKnob.endTouchAction ().addBinding (this.controllerHost.createAction ( () -> this.triggerTouch (false), () -> ""));
+        this.hardwareKnob.beginTouchAction ().addBinding (this.controllerHost.createAction (() -> this.triggerTouch (true), () -> ""));
+        this.hardwareKnob.endTouchAction ().addBinding (this.controllerHost.createAction (() -> this.triggerTouch (false), () -> ""));
 
         input.bindTouch (this, type, channel, control);
     }

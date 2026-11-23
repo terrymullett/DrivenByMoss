@@ -75,7 +75,7 @@ public class ColorSettingImpl extends AbstractSetting implements IColorSetting
     @Override
     public void addValueObserver (final IValueObserver<ColorEx> observer)
     {
-        this.colorValue.addValueObserver ( (red, green, blue) -> observer.update (new ColorEx (red, green, blue)));
+        this.colorValue.addValueObserver ((red, green, blue) -> observer.update (new ColorEx (red, green, blue)));
 
         // Directly fire the current value
         final Color color = this.colorValue.get ();

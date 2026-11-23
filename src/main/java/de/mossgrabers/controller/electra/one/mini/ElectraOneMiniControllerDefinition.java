@@ -1,0 +1,89 @@
+// Written by Jürgen Moßgraber - mossgrabers.de
+// (c) 2017-2026
+// Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
+
+package de.mossgrabers.controller.electra.one.mini;
+
+import de.mossgrabers.framework.controller.DefaultControllerDefinition;
+import de.mossgrabers.framework.utils.OperatingSystem;
+import de.mossgrabers.framework.utils.Pair;
+
+import java.util.List;
+import java.util.UUID;
+
+
+/**
+ * Definition class for the Electra One Mini controller extension.
+ *
+ * @author Jürgen Moßgraber
+ */
+public class ElectraOneMiniControllerDefinition extends DefaultControllerDefinition
+{
+    private static final String ELECTRA_CONTROLLER_ELECTRA_CTRL = "Electra Mini Electra CTRL";
+
+    /**
+     * Constructor.
+     */
+    public ElectraOneMiniControllerDefinition ()
+    {
+        super (UUID.fromString ("610CBC4D-E7D0-4D62-BCEB-97E91419C73F"), "Electra One Mini", "Electra", 2, 2);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Pair<String [], String []>> getMidiDiscoveryPairs (final OperatingSystem os)
+    {
+        final List<Pair<String [], String []>> pairs = super.getMidiDiscoveryPairs (os);
+
+        switch (os)
+        {
+            case WINDOWS:
+                pairs.add (this.addDeviceDiscoveryPair (new String []
+                {
+                    "Electra Mini",
+                    "MIDIIN3 (Electra Mini)"
+                }, new String []
+                {
+                    "Electra Mini",
+                    "MIDIOUT3 (Electra Mini)"
+                }));
+                for (int i = 2; i < 10; i++)
+                {
+                    final String [] portInNames = new String []
+                    {
+                        "Electra Mini #" + i,
+                        "MIDIIN" + 3 * i + " (Electra Mini)"
+                    };
+                    final String [] portOutNames = new String []
+                    {
+                        "Electra Mini #" + i,
+                        "MIDIOUT" + 3 * i + " (Electra Mini)"
+                    };
+                    pairs.add (this.addDeviceDiscoveryPair (portInNames, portOutNames));
+                }
+                break;
+
+            case MAC, MAC_ARM:
+                final String [] portNamesMac = new String []
+                {
+                    "Electra Mini Electra Port 1",
+                    ELECTRA_CONTROLLER_ELECTRA_CTRL
+                };
+                pairs.add (this.addDeviceDiscoveryPair (portNamesMac, portNamesMac));
+                break;
+
+            default:
+            case LINUX:
+                final String [] portNamesLinux = new String []
+                {
+                    "Electra Mini Electra Port 1",
+                    ELECTRA_CONTROLLER_ELECTRA_CTRL
+                };
+                pairs.add (this.addDeviceDiscoveryPair (portNamesLinux, portNamesLinux));
+                break;
+        }
+
+        return pairs;
+    }
+}

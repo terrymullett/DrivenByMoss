@@ -54,7 +54,7 @@ public class HwLightImpl extends AbstractHwControl implements IHwLight
     {
         // Workaround for missing clear cache method
         this.turnOff ();
-        this.host.scheduleTask ( () -> this.hardwareLight.state ().setValueSupplier (this.valueSupplier), 100);
+        this.host.scheduleTask (() -> this.hardwareLight.state ().setValueSupplier (this.valueSupplier), 100);
     }
 
 
@@ -62,7 +62,7 @@ public class HwLightImpl extends AbstractHwControl implements IHwLight
     @Override
     public void turnOff ()
     {
-        this.hardwareLight.state ().setValueSupplier ( () -> null);
+        this.hardwareLight.state ().setValueSupplier (() -> null);
     }
 
 
